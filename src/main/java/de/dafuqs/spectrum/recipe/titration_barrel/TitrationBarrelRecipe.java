@@ -1,39 +1,27 @@
 package de.dafuqs.spectrum.recipe.titration_barrel;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import de.dafuqs.spectrum.SpectrumCommon;
-import de.dafuqs.spectrum.helpers.InventoryHelper;
-import de.dafuqs.spectrum.helpers.Support;
+import com.google.gson.*;
+import de.dafuqs.spectrum.*;
 import de.dafuqs.spectrum.helpers.TimeHelper;
-import de.dafuqs.spectrum.items.food.beverages.BeverageItem;
-import de.dafuqs.spectrum.items.food.beverages.properties.BeverageProperties;
-import de.dafuqs.spectrum.items.food.beverages.properties.VariantBeverageProperties;
-import de.dafuqs.spectrum.recipe.GatedSpectrumRecipe;
-import de.dafuqs.spectrum.recipe.SpectrumRecipeTypes;
-import de.dafuqs.spectrum.registries.SpectrumItems;
-import net.id.incubus_core.recipe.IngredientStack;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
+import de.dafuqs.spectrum.helpers.*;
+import de.dafuqs.spectrum.items.food.beverages.*;
+import de.dafuqs.spectrum.items.food.beverages.properties.*;
+import de.dafuqs.spectrum.recipe.*;
+import de.dafuqs.spectrum.registries.*;
+import net.id.incubus_core.recipe.*;
+import net.minecraft.entity.effect.*;
+import net.minecraft.fluid.*;
+import net.minecraft.inventory.*;
+import net.minecraft.item.*;
+import net.minecraft.network.*;
+import net.minecraft.recipe.*;
+import net.minecraft.text.*;
+import net.minecraft.util.*;
+import net.minecraft.util.collection.*;
+import net.minecraft.util.registry.*;
+import net.minecraft.world.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class TitrationBarrelRecipe extends GatedSpectrumRecipe implements ITitrationBarrelRecipe {
 	
@@ -228,22 +216,24 @@ public class TitrationBarrelRecipe extends GatedSpectrumRecipe implements ITitra
 	}
 	
 	private ItemStack tapWith(float thickness, long secondsFermented, float downfall, float temperature) {
-		if(secondsFermented / 60 / 60 < this.minFermentationTimeHours) {
+		if (secondsFermented / 60 / 60 < this.minFermentationTimeHours) {
 			return NOT_FERMENTED_LONG_ENOUGH_OUTPUT_STACK;
 		}
 		
 		ItemStack stack = this.outputItemStack.copy();
 		stack.setCount(1);
 		
-		if(this.fermentationData != null) {
+		if (this.fermentationData == null) {
+			return stack;
+		} else {
 			float ageIngameDays = TimeHelper.minecraftDaysFromSeconds(secondsFermented);
 			double alcPercent = 0;
-			if(this.fermentationData.fermentationSpeedMod > 0) {
+			if (this.fermentationData.fermentationSpeedMod > 0) {
 				alcPercent = getAlcPercent(thickness, downfall, ageIngameDays);
 				alcPercent = Math.max(0, alcPercent);
 			}
 			
-			if(alcPercent >= 100) {
+			if (alcPercent >= 100) {
 				return PURE_ALCOHOL_STACK;
 			}
 			
@@ -255,20 +245,20 @@ public class TitrationBarrelRecipe extends GatedSpectrumRecipe implements ITitra
 				properties = VariantBeverageProperties.getFromStack(stack);
 			}
 			
-			if(properties instanceof VariantBeverageProperties variantBeverageProperties) {
+			if (properties instanceof VariantBeverageProperties variantBeverageProperties) {
 				float durationMultiplier = 1.5F - thickness / 2F;
 				
 				List<StatusEffectInstance> effects = new ArrayList<>();
 				
-				for(StatusEffectEntry entry : this.fermentationData.statusEffectEntries) {
+				for (StatusEffectEntry entry : this.fermentationData.statusEffectEntries) {
 					int potency = -1;
 					int durationTicks = entry.baseDuration;
-					for(StatusEffectPotencyEntry potencyEntry : entry.potencyEntries) {
-						if(thickness >= potencyEntry.minThickness && alcPercent >= potencyEntry.minAlcPercent) {
+					for (StatusEffectPotencyEntry potencyEntry : entry.potencyEntries) {
+						if (thickness >= potencyEntry.minThickness && alcPercent >= potencyEntry.minAlcPercent) {
 							potency = potencyEntry.potency;
 						}
 					}
-					if(potency > -1) {
+					if (potency > -1) {
 						effects.add(new StatusEffectInstance(entry.statusEffect, (int) (durationTicks * durationMultiplier), potency));
 					}
 				}
@@ -306,23 +296,23 @@ public class TitrationBarrelRecipe extends GatedSpectrumRecipe implements ITitra
 	// but this way it might be easier for translations either way
 	public static MutableText getDurationText(int minFermentationTimeHours, TitrationBarrelRecipe.FermentationData fermentationData) {
 		MutableText text;
-		if(fermentationData == null) {
-			if(minFermentationTimeHours == 1) {
+		if (fermentationData == null) {
+			if (minFermentationTimeHours == 1) {
 				text = Text.translatable("container.spectrum.rei.titration_barrel.time_hour");
-			} else if(minFermentationTimeHours == 24) {
+			} else if (minFermentationTimeHours == 24) {
 				text = Text.translatable("container.spectrum.rei.titration_barrel.time_day");
 			} else if (minFermentationTimeHours > 72) {
-				text = Text.translatable("container.spectrum.rei.titration_barrel.time_days", Support.getWithOneDecimalAfterComma(minFermentationTimeHours  / 24F));
+				text = Text.translatable("container.spectrum.rei.titration_barrel.time_days", Support.getWithOneDecimalAfterComma(minFermentationTimeHours / 24F));
 			} else {
 				text = Text.translatable("container.spectrum.rei.titration_barrel.time_hours", minFermentationTimeHours);
 			}
 		} else {
-			if(minFermentationTimeHours == 1) {
+			if (minFermentationTimeHours == 1) {
 				text = Text.translatable("container.spectrum.rei.titration_barrel.at_least_time_hour");
-			} else if(minFermentationTimeHours == 24) {
+			} else if (minFermentationTimeHours == 24) {
 				text = Text.translatable("container.spectrum.rei.titration_barrel.at_least_time_day");
 			} else if (minFermentationTimeHours > 72) {
-				text = Text.translatable("container.spectrum.rei.titration_barrel.at_least_time_days", Support.getWithOneDecimalAfterComma(minFermentationTimeHours  / 24F));
+				text = Text.translatable("container.spectrum.rei.titration_barrel.at_least_time_days", Support.getWithOneDecimalAfterComma(minFermentationTimeHours / 24F));
 			} else {
 				text = Text.translatable("container.spectrum.rei.titration_barrel.at_least_time_hours", minFermentationTimeHours);
 			}

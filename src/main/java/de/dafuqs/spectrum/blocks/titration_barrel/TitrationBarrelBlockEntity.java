@@ -1,44 +1,32 @@
 package de.dafuqs.spectrum.blocks.titration_barrel;
 
-import de.dafuqs.spectrum.helpers.InventoryHelper;
-import de.dafuqs.spectrum.helpers.Support;
 import de.dafuqs.spectrum.helpers.TimeHelper;
-import de.dafuqs.spectrum.progression.SpectrumAdvancementCriteria;
-import de.dafuqs.spectrum.recipe.SpectrumRecipeTypes;
-import de.dafuqs.spectrum.recipe.titration_barrel.ITitrationBarrelRecipe;
-import de.dafuqs.spectrum.registries.SpectrumBlockEntities;
-import net.fabricmc.fabric.mixin.transfer.BucketItemAccessor;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsage;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import de.dafuqs.spectrum.helpers.*;
+import de.dafuqs.spectrum.progression.*;
+import de.dafuqs.spectrum.recipe.*;
+import de.dafuqs.spectrum.recipe.titration_barrel.*;
+import de.dafuqs.spectrum.registries.*;
+import net.fabricmc.fabric.mixin.transfer.*;
+import net.minecraft.block.*;
+import net.minecraft.block.entity.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.fluid.*;
+import net.minecraft.inventory.*;
+import net.minecraft.item.*;
+import net.minecraft.nbt.*;
+import net.minecraft.server.network.*;
+import net.minecraft.sound.*;
+import net.minecraft.text.*;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
+import net.minecraft.util.registry.*;
+import net.minecraft.world.*;
+import net.minecraft.world.biome.*;
+import org.jetbrains.annotations.*;
 
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
 
-import static de.dafuqs.spectrum.blocks.titration_barrel.TitrationBarrelBlock.BARREL_STATE;
+import static de.dafuqs.spectrum.blocks.titration_barrel.TitrationBarrelBlock.*;
 
 public class TitrationBarrelBlockEntity extends BlockEntity {
 	
@@ -181,11 +169,6 @@ public class TitrationBarrelBlockEntity extends BlockEntity {
 		return extractedBottles >= recipe.getOutputCountAfterAngelsShare(temperature, getSealSeconds());
 	}
 	
-	public int getExtractableBottleCount(World world, BlockPos blockPos, ITitrationBarrelRecipe recipe) {
-		Biome biome = world.getBiome(blockPos).value();
-		return recipe.getOutputCountAfterAngelsShare(biome.getTemperature(), getSealSeconds());
-	}
-	
 	public void addDayOfSealTime() {
 		this.sealTime -= TimeHelper.EPOCH_DAY_MILLIS;
 		this.markDirty();
@@ -195,7 +178,7 @@ public class TitrationBarrelBlockEntity extends BlockEntity {
 		ItemStack harvestedStack = ItemStack.EMPTY;
 		Biome biome = world.getBiome(blockPos).value();
 		
-		Optional<ITitrationBarrelRecipe> optionalRecipe = world.getRecipeManager().getFirstMatch(SpectrumRecipeTypes.TITRATION_BARREL, this.inventory, world);
+		Optional<ITitrationBarrelRecipe> optionalRecipe = getRecipeForInventory(world);
 		if (optionalRecipe.isEmpty()) {
 			if (player != null) {
 				if(inventory.isEmpty() && storedFluid == Fluids.EMPTY) {
@@ -238,20 +221,24 @@ public class TitrationBarrelBlockEntity extends BlockEntity {
 			SpectrumAdvancementCriteria.TITRATION_BARREL_TAPPING.trigger((ServerPlayerEntity) player, harvestedStack, daysSealed, inventoryCount);
 		}
 		
-		if(optionalRecipe.isEmpty() || isEmpty(biome.getTemperature(), this.extractedBottles, optionalRecipe.get()) || !optionalRecipe.get().canPlayerCraft(player)) {
+		if (optionalRecipe.isEmpty() || isEmpty(biome.getTemperature(), this.extractedBottles, optionalRecipe.get()) || !optionalRecipe.get().canPlayerCraft(player)) {
 			reset(world, blockPos, blockState);
 		}
-
+		
 		this.markDirty();
 		
 		return harvestedStack;
 	}
 	
+	public Optional<ITitrationBarrelRecipe> getRecipeForInventory(World world) {
+		return world.getRecipeManager().getFirstMatch(SpectrumRecipeTypes.TITRATION_BARREL, this.inventory, world);
+	}
+	
 	public void giveRecipeRemainders(PlayerEntity player) {
-		for(ItemStack stack : this.inventory.stacks) {
+		for (ItemStack stack : this.inventory.stacks) {
 			Item item = stack.getItem();
 			Item remainderItem = item.getRecipeRemainder();
-			if(remainderItem != null) {
+			if (remainderItem != null) {
 				ItemStack remainderStack = remainderItem.getDefaultStack();
 				remainderStack.setCount(stack.getCount());
 				Support.givePlayer(player, remainderStack);

@@ -271,8 +271,6 @@ public class TitrationBarrelRecipe extends GatedSpectrumRecipe implements ITitra
 			properties.thickness = thickness;
 			return properties.getStack(stack);
 		}
-		
-		return outputItemStack;
 	}
 	
 	protected double getAlcPercent(float thickness, float downfall, float ageIngameDays) {

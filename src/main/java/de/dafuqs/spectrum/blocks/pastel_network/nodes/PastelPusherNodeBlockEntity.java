@@ -7,13 +7,13 @@ import net.minecraft.util.math.*;
 
 public class PastelPusherNodeBlockEntity extends PastelNodeBlockEntity {
 
-	public PastelPusherNodeBlockEntity(BlockPos blockPos, BlockState blockState) {
-		super(SpectrumBlockEntities.PUSHER_NODE, blockPos, blockState);
-	}
+    public PastelPusherNodeBlockEntity(BlockPos blockPos, BlockState blockState) {
+        super(SpectrumBlockEntities.PUSHER_NODE, blockPos, blockState);
+    }
 
-	@Override
-	public PastelNodeType getNodeType() {
-		return PastelNodeType.PUSHER;
-	}
+    @Override
+    public PastelNodeType getNodeType() {
+        return PastelNodeType.PUSHER;
+    }
 
 }

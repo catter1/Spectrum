@@ -7,13 +7,13 @@ import net.minecraft.util.math.*;
 
 public class PastelStorageNodeBlockEntity extends PastelNodeBlockEntity {
 
-	public PastelStorageNodeBlockEntity(BlockPos blockPos, BlockState blockState) {
-		super(SpectrumBlockEntities.STORAGE_NODE, blockPos, blockState);
-	}
+    public PastelStorageNodeBlockEntity(BlockPos blockPos, BlockState blockState) {
+        super(SpectrumBlockEntities.STORAGE_NODE, blockPos, blockState);
+    }
 
-	@Override
-	public PastelNodeType getNodeType() {
-		return PastelNodeType.STORAGE;
-	}
+    @Override
+    public PastelNodeType getNodeType() {
+        return PastelNodeType.STORAGE;
+    }
 
 }

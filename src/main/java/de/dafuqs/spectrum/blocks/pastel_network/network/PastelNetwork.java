@@ -1,6 +1,11 @@
-package de.dafuqs.spectrum.blocks.pastel_network;
+package de.dafuqs.spectrum.blocks.pastel_network.network;
 
+import de.dafuqs.spectrum.blocks.pastel_network.*;
 import de.dafuqs.spectrum.blocks.pastel_network.nodes.*;
+import net.fabricmc.fabric.api.transfer.v1.item.*;
+import net.fabricmc.fabric.api.transfer.v1.transaction.*;
+import net.minecraft.inventory.*;
+import net.minecraft.item.*;
 import net.minecraft.util.math.*;
 import net.minecraft.world.*;
 
@@ -102,6 +107,7 @@ public class PastelNetwork {
         return false;
     }
 
+    // TODO: call
     public void merge(PastelNetwork network) {
         for (Map.Entry<PastelNodeType, List<PastelNodeBlockEntity>> nodeList : network.getGroupedNodes().entrySet()) {
             List<PastelNodeBlockEntity> existingNodes = this.nodes.get(nodeList.getKey());
@@ -118,7 +124,25 @@ public class PastelNetwork {
     }
 
     public void tickLogic() {
+        for (PastelNodeBlockEntity pusher : this.nodes.get(PastelNodeType.PUSHER)) {
+            Inventory pusherInventory = pusher.getConnectedInventory();
+            if (pusherInventory != null) {
+                InventoryStorage pusherStorage = InventoryStorage.of(pusherInventory, null);
+                for (PastelNodeBlockEntity storage : this.nodes.get(PastelNodeType.STORAGE)) {
+                    Inventory storageInventory = storage.getConnectedInventory();
+                    if (storageInventory != null) {
+                        InventoryStorage storageStorage = InventoryStorage.of(storageInventory, null);
 
+                        ItemVariant stone = ItemVariant.of(Items.STONE);
+                        try (Transaction transaction = Transaction.openOuter()) {
+                            if (pusherStorage.extract(stone, 1, transaction) == 1 && storageStorage.insert(stone, 1, transaction) == 1) {
+                                transaction.commit();
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private final SchedulerMap<BlockPos> particleCooldowns = new SchedulerMap<>();

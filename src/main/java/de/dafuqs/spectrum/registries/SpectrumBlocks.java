@@ -29,7 +29,6 @@ import de.dafuqs.spectrum.blocks.memory.*;
 import de.dafuqs.spectrum.blocks.mob_blocks.*;
 import de.dafuqs.spectrum.blocks.mob_head.*;
 import de.dafuqs.spectrum.blocks.particle_spawner.*;
-import de.dafuqs.spectrum.blocks.pastel_network.*;
 import de.dafuqs.spectrum.blocks.pastel_network.nodes.*;
 import de.dafuqs.spectrum.blocks.pedestal.*;
 import de.dafuqs.spectrum.blocks.potion_workshop.*;

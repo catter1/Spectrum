@@ -2,7 +2,9 @@
   "criteria": {
     "collected_azurite": {
       "trigger":"revelationary:advancement_gotten",
-      "conditions": { "advancement_identifier": "spectrum:__midgame/collect_azurite" }
+      "conditions": {
+        "advancement_identifier": "spectrum:midgame/collect_azurite"
+      }
     }
   }
 }

@@ -1,65 +1,46 @@
 package de.dafuqs.spectrum.blocks.chests;
 
-import de.dafuqs.spectrum.events.SpectrumGameEvents;
-import de.dafuqs.spectrum.events.listeners.EventQueue;
-import de.dafuqs.spectrum.events.listeners.ExperienceOrbEventQueue;
-import de.dafuqs.spectrum.events.listeners.ItemAndExperienceEventQueue;
-import de.dafuqs.spectrum.events.listeners.ItemEntityEventQueue;
-import de.dafuqs.spectrum.helpers.InventoryHelper;
-import de.dafuqs.spectrum.inventories.SuckingChestScreenHandler;
-import de.dafuqs.spectrum.items.ExperienceStorageItem;
-import de.dafuqs.spectrum.networking.SpectrumS2CPacketSender;
-import de.dafuqs.spectrum.particle.SpectrumParticleTypes;
-import de.dafuqs.spectrum.registries.SpectrumBlockEntities;
-import de.dafuqs.spectrum.registries.SpectrumSoundEvents;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ExperienceOrbEntity;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.SidedInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
-import net.minecraft.world.event.BlockPositionSource;
-import net.minecraft.world.event.GameEvent;
-import net.minecraft.world.event.listener.GameEventListener;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import de.dafuqs.spectrum.blocks.*;
+import de.dafuqs.spectrum.events.*;
+import de.dafuqs.spectrum.events.listeners.*;
+import de.dafuqs.spectrum.helpers.*;
+import de.dafuqs.spectrum.inventories.*;
+import de.dafuqs.spectrum.items.*;
+import de.dafuqs.spectrum.networking.*;
+import de.dafuqs.spectrum.particle.*;
+import de.dafuqs.spectrum.registries.*;
+import net.fabricmc.fabric.api.screenhandler.v1.*;
+import net.minecraft.block.*;
+import net.minecraft.entity.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.inventory.*;
+import net.minecraft.item.*;
+import net.minecraft.nbt.*;
+import net.minecraft.network.*;
+import net.minecraft.screen.*;
+import net.minecraft.server.network.*;
+import net.minecraft.server.world.*;
+import net.minecraft.sound.*;
+import net.minecraft.text.*;
+import net.minecraft.util.collection.*;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
+import net.minecraft.world.event.*;
+import net.minecraft.world.event.listener.*;
+import org.jetbrains.annotations.*;
 
-import java.util.List;
-import java.util.stream.IntStream;
+import java.util.*;
+import java.util.stream.*;
 
-public class SuckingChestBlockEntity extends SpectrumChestBlockEntity implements ExtendedScreenHandlerFactory, SidedInventory, EventQueue.Callback {
-	
+public class SuckingChestBlockEntity extends SpectrumChestBlockEntity implements ExtendedScreenHandlerFactory, SidedInventory, FilterConfigurable, EventQueue.Callback {
+
 	public static final int INVENTORY_SIZE = 28;
 	public static final int ITEM_FILTER_SLOTS = 5;
 	public static final int EXPERIENCE_STORAGE_PROVIDER_ITEM_SLOT = 27;
 	private static final int RANGE = 12;
 	private final ItemAndExperienceEventQueue itemAndExperienceEventQueue;
 	private final List<Item> filterItems;
-	
+
 	public SuckingChestBlockEntity(BlockPos blockPos, BlockState blockState) {
 		super(SpectrumBlockEntities.SUCKING_CHEST, blockPos, blockState);
 		this.itemAndExperienceEventQueue = new ItemAndExperienceEventQueue(new BlockPositionSource(this.pos), RANGE, this);
@@ -109,20 +90,14 @@ public class SuckingChestBlockEntity extends SpectrumChestBlockEntity implements
 	
 	public void writeNbt(NbtCompound tag) {
 		super.writeNbt(tag);
-		for (int i = 0; i < ITEM_FILTER_SLOTS; i++) {
-			tag.putString("Filter" + i, Registry.ITEM.getId(this.filterItems.get(i)).toString());
-		}
+		writeFilterNbt(tag, this.filterItems);
 	}
-	
+
 	public void readNbt(NbtCompound tag) {
 		super.readNbt(tag);
-		for (int i = 0; i < ITEM_FILTER_SLOTS; i++) {
-			if (tag.contains("Filter" + i, NbtElement.STRING_TYPE)) {
-				this.filterItems.set(i, Registry.ITEM.get(new Identifier(tag.getString("Filter" + i))));
-			}
-		}
+		readFilterNbt(tag, this.filterItems);
 	}
-	
+
 	@Override
 	public int size() {
 		return 27 + 1; // 3 rows, 1 knowledge gem, 5 item filters (they are not real slots, though)
@@ -202,19 +177,22 @@ public class SuckingChestBlockEntity extends SpectrumChestBlockEntity implements
 	public SoundEvent getCloseSound() {
 		return SpectrumSoundEvents.SUCKING_CHEST_CLOSE;
 	}
-	
+
 	@Override
 	public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
 		buf.writeBlockPos(this.pos);
-		for (Item filterItem : this.filterItems) {
-			buf.writeIdentifier(Registry.ITEM.getId(filterItem));
-		}
+		FilterConfigurable.writeScreenOpeningData(buf, filterItems);
 	}
-	
+
+	@Override
+	public int getFilterCount() {
+		return ITEM_FILTER_SLOTS;
+	}
+
 	public List<Item> getItemFilters() {
 		return this.filterItems;
 	}
-	
+
 	public void setFilterItem(int slot, Item item) {
 		this.filterItems.set(slot, item);
 		this.markDirty();

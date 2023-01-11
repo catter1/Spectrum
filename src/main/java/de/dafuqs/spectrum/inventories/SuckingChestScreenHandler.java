@@ -1,37 +1,30 @@
 package de.dafuqs.spectrum.inventories;
 
-import de.dafuqs.spectrum.blocks.chests.SuckingChestBlockEntity;
-import de.dafuqs.spectrum.inventories.slots.ShadowSlot;
-import de.dafuqs.spectrum.inventories.slots.StackFilterSlot;
-import de.dafuqs.spectrum.registries.SpectrumItems;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.util.ClickType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
-
-import java.util.List;
+import de.dafuqs.spectrum.blocks.*;
+import de.dafuqs.spectrum.blocks.chests.*;
+import de.dafuqs.spectrum.inventories.slots.*;
+import de.dafuqs.spectrum.registries.*;
+import net.minecraft.block.entity.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.inventory.*;
+import net.minecraft.item.*;
+import net.minecraft.network.*;
+import net.minecraft.screen.*;
+import net.minecraft.screen.slot.*;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
 
 public class SuckingChestScreenHandler extends ScreenHandler {
-	
+
 	protected final World world;
-	private final Inventory inventory;
+	protected final Inventory inventory;
 	protected int ROWS = 3;
 	protected SuckingChestBlockEntity suckingChestBlockEntity;
 	protected Inventory filterInventory;
 	
 	public SuckingChestScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf packetByteBuf) {
-		this(syncId, playerInventory, packetByteBuf.readBlockPos(), getFilterInventoryFromPacket(packetByteBuf));
+		this(syncId, playerInventory, packetByteBuf.readBlockPos(), FilterConfigurable.getFilterInventoryFromPacket(packetByteBuf));
 	}
 	
 	public SuckingChestScreenHandler(int syncId, PlayerInventory playerInventory, BlockPos readBlockPos, Inventory filterInventory) {
@@ -44,9 +37,9 @@ public class SuckingChestScreenHandler extends ScreenHandler {
 	}
 	
 	public SuckingChestScreenHandler(int syncId, PlayerInventory playerInventory, SuckingChestBlockEntity suckingChestBlockEntity) {
-		this(SpectrumScreenHandlerTypes.SUCKING_CHEST, syncId, playerInventory, suckingChestBlockEntity, getFilterInventoryFromItems(suckingChestBlockEntity.getItemFilters()));
+		this(SpectrumScreenHandlerTypes.SUCKING_CHEST, syncId, playerInventory, suckingChestBlockEntity, FilterConfigurable.getFilterInventoryFromItems(suckingChestBlockEntity.getItemFilters()));
 		this.suckingChestBlockEntity = suckingChestBlockEntity;
-		this.filterInventory = getFilterInventoryFromItems(suckingChestBlockEntity.getItemFilters());
+		this.filterInventory = FilterConfigurable.getFilterInventoryFromItems(suckingChestBlockEntity.getItemFilters());
 	}
 	
 	protected SuckingChestScreenHandler(ScreenHandlerType<?> type, int i, PlayerInventory playerInventory, Inventory filterInventory) {
@@ -92,22 +85,6 @@ public class SuckingChestScreenHandler extends ScreenHandler {
 		for (k = 0; k < SuckingChestBlockEntity.ITEM_FILTER_SLOTS; ++k) {
 			this.addSlot(new SuckingChestFilterSlot(filterInventory, k, 8 + k * 23, 18));
 		}
-	}
-	
-	protected static Inventory getFilterInventoryFromPacket(PacketByteBuf packetByteBuf) {
-		Inventory inventory = new SimpleInventory(SuckingChestBlockEntity.ITEM_FILTER_SLOTS);
-		for (int i = 0; i < SuckingChestBlockEntity.ITEM_FILTER_SLOTS; i++) {
-			inventory.setStack(i, Registry.ITEM.get(packetByteBuf.readIdentifier()).getDefaultStack());
-		}
-		return inventory;
-	}
-	
-	protected static Inventory getFilterInventoryFromItems(List<Item> items) {
-		Inventory inventory = new SimpleInventory(SuckingChestBlockEntity.ITEM_FILTER_SLOTS);
-		for (int i = 0; i < SuckingChestBlockEntity.ITEM_FILTER_SLOTS; i++) {
-			inventory.setStack(i, items.get(i).getDefaultStack());
-		}
-		return inventory;
 	}
 	
 	public boolean canUse(PlayerEntity player) {

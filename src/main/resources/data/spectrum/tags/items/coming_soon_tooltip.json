@@ -18,7 +18,7 @@
     "spectrum:spirit_sallow_log",
     "spectrum:spirit_sallow_leaves",
     "spectrum:spirit_sallow_heart",
-    "#spectrum:catkin",
-    "spectrum:sacred_soil"
+    "spectrum:sacred_soil",
+    "#spectrum:catkin"
   ]
 }

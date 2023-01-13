@@ -184,11 +184,6 @@ public class SuckingChestBlockEntity extends SpectrumChestBlockEntity implements
 		FilterConfigurable.writeScreenOpeningData(buf, filterItems);
 	}
 
-	@Override
-	public int getFilterCount() {
-		return ITEM_FILTER_SLOTS;
-	}
-
 	public List<Item> getItemFilters() {
 		return this.filterItems;
 	}

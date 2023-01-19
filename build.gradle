@@ -95,25 +95,23 @@ dependencies {
 	modImplementation include("com.github.emilyploszaj:step-height-entity-attribute:${project.step_height_attribute_version}")
 
 	modImplementation include("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}")
-	modImplementation include("com.github.DaFuqs:Incubus-Core:${project.incubus_core_version}")
+	modImplementation include("com.github.devs-immortal:Incubus-Core:${project.incubus_core_version}")
 	modImplementation include("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}")
 
 	// https://github.com/Terrails/HealthOverlay
 	// Thanks to yurisuika's Raised for the head-up (https://github.com/yurisuika/Raised/blob/Fabric-1.19/build.gradle)
 	modCompileOnly("curse.maven:health-overlay-fabric-313219:${project.health_overlay_version}") { transitive = false }
 
-	//modImplementation("com.github.LudoCrypt:Liminal-Library:${project.liminal_lib_version}")
-
-	implementation include("com.github.LlamaLad7:MixinExtras:0.0.12")
-	annotationProcessor("com.github.LlamaLad7:MixinExtras:0.0.12")
+	implementation include("com.github.LlamaLad7:MixinExtras:${project.mixin_extras_version}")
+	annotationProcessor("com.github.LlamaLad7:MixinExtras:${project.mixin_extras_version}")
 
 	// includes the textures in the "programmer art" folder in the programmer art texture pack
-	modImplementation "com.extracraftx.minecraft:ProgrammerArtInjector:${project.programmer_art_injector_version}"
-	include "com.extracraftx.minecraft:ProgrammerArtInjector:${project.programmer_art_injector_version}"
+	//modImplementation "com.extracraftx.minecraft:ProgrammerArtInjector:${project.programmer_art_injector_version}"
+	//include "com.extracraftx.minecraft:ProgrammerArtInjector:${project.programmer_art_injector_version}"
 
 	// Soft testing-only dependencies:
 	// Descriptions for all Enchantments https://maven.blamejared.com/net/darkhax/enchdesc/
-	modCompileOnly("net.darkhax.enchdesc:EnchantmentDescriptions-Common-${project.enchantment_descriptions_mc_version}:${project.enchantment_descriptions_mod_version}")
+	//modCompileOnly("net.darkhax.enchdesc:EnchantmentDescriptions-Common-${project.enchantment_descriptions_mc_version}:${project.enchantment_descriptions_mod_version}")
 	//modRuntimeOnly("squeek.appleskin:appleskin-fabric:mc1.18.2-2.4.1") { exclude module: 'modmenu' }
 }
 

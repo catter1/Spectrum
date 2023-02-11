@@ -1,24 +1,20 @@
 package de.dafuqs.spectrum.helpers;
 
-import de.dafuqs.spectrum.entity.entity.EggLayingWoolyPigEntity;
-import de.dafuqs.spectrum.items.PigmentItem;
-import de.dafuqs.spectrum.mixin.accessors.ShulkerEntityAccessor;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.mob.ShulkerEntity;
-import net.minecraft.entity.passive.SheepEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.DyeItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.math.Vec3f;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import de.dafuqs.spectrum.entity.entity.*;
+import de.dafuqs.spectrum.items.*;
+import de.dafuqs.spectrum.mixin.accessors.*;
+import net.minecraft.entity.*;
+import net.minecraft.entity.mob.*;
+import net.minecraft.entity.passive.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.item.*;
+import net.minecraft.sound.*;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
+import org.jetbrains.annotations.*;
 
 import java.awt.*;
-import java.util.Optional;
+import java.util.*;
 
 public class ColorHelper {
 	
@@ -57,7 +53,7 @@ public class ColorHelper {
 	public static @NotNull Color colorFromRGB(float r, float g, float b) {
 		return colorFromRGBA(r, g, b, 1f);
 	}
-	
+
 	@Contract(value = "_, _, _, _ -> new", pure = true)
 	public static @NotNull Color colorFromRGBA(float r, float g, float b, float a) {
 		return new Color(
@@ -67,7 +63,11 @@ public class ColorHelper {
 				(int) (a * 255 + 0.5)
 		);
 	}
-	
+
+	public static int getColorFromInt(int seed) {
+		return Color.getHSBColor((float) seed / Integer.MAX_VALUE, 0.7F, 0.9F).getRGB();
+	}
+
 	@NotNull
 	public static Vec3f colorIntToVec(int color2) {
 		Color colorValue2 = new Color(color2);
@@ -75,7 +75,7 @@ public class ColorHelper {
 		colorValue2.getColorComponents(argb2);
 		return new Vec3f(argb2[0], argb2[1], argb2[2]);
 	}
-	
+
 	public static Optional<DyeColor> getDyeColorOfItemStack(@NotNull ItemStack itemStack) {
 		if (!itemStack.isEmpty()) {
 			Item item = itemStack.getItem();

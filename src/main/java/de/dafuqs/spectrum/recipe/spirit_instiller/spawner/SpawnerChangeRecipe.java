@@ -1,33 +1,31 @@
 package de.dafuqs.spectrum.recipe.spirit_instiller.spawner;
 
-import de.dafuqs.spectrum.SpectrumCommon;
-import de.dafuqs.spectrum.blocks.MultiblockCrafter;
-import de.dafuqs.spectrum.blocks.item_bowl.ItemBowlBlockEntity;
-import de.dafuqs.spectrum.blocks.spirit_instiller.SpiritInstillerBlockEntity;
-import de.dafuqs.spectrum.blocks.upgrade.Upgradeable;
-import de.dafuqs.spectrum.helpers.Support;
-import de.dafuqs.spectrum.recipe.spirit_instiller.SpiritInstillerRecipe;
-import de.dafuqs.spectrum.registries.SpectrumItemTags;
-import de.dafuqs.spectrum.registries.SpectrumItems;
-import net.id.incubus_core.recipe.IngredientStack;
-import net.id.incubus_core.recipe.matchbook.Matchbook;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import de.dafuqs.spectrum.*;
+import de.dafuqs.spectrum.blocks.*;
+import de.dafuqs.spectrum.blocks.item_bowl.*;
+import de.dafuqs.spectrum.blocks.spirit_instiller.*;
+import de.dafuqs.spectrum.blocks.upgrade.*;
+import de.dafuqs.spectrum.helpers.*;
+import de.dafuqs.spectrum.recipe.spirit_instiller.*;
+import de.dafuqs.spectrum.registries.*;
+import net.id.incubus_core.recipe.*;
+import net.id.incubus_core.recipe.matchbook.*;
+import net.minecraft.block.entity.*;
+import net.minecraft.inventory.*;
+import net.minecraft.item.*;
+import net.minecraft.nbt.*;
+import net.minecraft.recipe.*;
+import net.minecraft.text.*;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
 
-import java.util.Map;
+import java.util.*;
 
 public abstract class SpawnerChangeRecipe extends SpiritInstillerRecipe {
 	
 	public SpawnerChangeRecipe(Identifier identifier, IngredientStack ingredient) {
-		super(identifier, "spawner_manipulation", false, SpectrumCommon.locate("milestones/unlock_spawner_manipulation"), IngredientStack.of(Ingredient.fromTag(SpectrumItemTags.SPAWNERS)), ingredient, IngredientStack.of(Ingredient.ofItems(SpectrumItems.VEGETAL), Matchbook.empty(), null, 4), SpectrumItems.SPAWNER.getDefaultStack(), 0, 200, true);
+		super(identifier, "spawner_manipulation", false, SpectrumCommon.locate("milestones/unlock_spawner_manipulation"), IngredientStack.of(Ingredient.fromTag(SpectrumItemTags.SPAWNERS)), ingredient, IngredientStack.of(Ingredient.ofItems(SpectrumItems.VEGETAL), Matchbook.empty(), null, 4), SpectrumItems.SPAWNER.getDefaultStack(), 200, 0, true);
 	}
 	
 	@Override

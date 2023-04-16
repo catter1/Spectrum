@@ -1,48 +1,32 @@
 package de.dafuqs.spectrum.blocks.pedestal;
 
-import de.dafuqs.spectrum.SpectrumCommon;
-import de.dafuqs.spectrum.blocks.PaintbrushTriggered;
-import de.dafuqs.spectrum.blocks.RedstonePoweredBlock;
-import de.dafuqs.spectrum.enums.PedestalRecipeTier;
-import de.dafuqs.spectrum.networking.SpectrumS2CPacketSender;
-import de.dafuqs.spectrum.particle.SpectrumParticleTypes;
-import de.dafuqs.spectrum.recipe.GatedRecipe;
-import de.dafuqs.spectrum.registries.SpectrumBlockEntities;
-import de.dafuqs.spectrum.registries.SpectrumMultiblocks;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import de.dafuqs.spectrum.*;
+import de.dafuqs.spectrum.blocks.*;
+import de.dafuqs.spectrum.enums.*;
+import de.dafuqs.spectrum.networking.*;
+import de.dafuqs.spectrum.particle.*;
+import de.dafuqs.spectrum.recipe.*;
+import de.dafuqs.spectrum.registries.*;
+import net.fabricmc.api.*;
 import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.AutomaticItemPlacementContext;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particle.DustParticleEffect;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.block.entity.*;
+import net.minecraft.client.*;
+import net.minecraft.entity.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.item.*;
+import net.minecraft.particle.*;
+import net.minecraft.screen.*;
+import net.minecraft.server.network.*;
+import net.minecraft.state.*;
+import net.minecraft.state.property.*;
 import net.minecraft.util.*;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3f;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import vazkii.patchouli.api.IMultiblock;
-import vazkii.patchouli.api.PatchouliAPI;
+import net.minecraft.util.hit.*;
+import net.minecraft.util.math.*;
+import net.minecraft.util.math.random.*;
+import net.minecraft.util.shape.*;
+import net.minecraft.world.*;
+import org.jetbrains.annotations.*;
+import vazkii.patchouli.api.*;
 
 public class PedestalBlock extends BlockWithEntity implements RedstonePoweredBlock, PaintbrushTriggered {
 	
@@ -300,13 +284,15 @@ public class PedestalBlock extends BlockWithEntity implements RedstonePoweredBlo
 	public ActionResult onPaintBrushTrigger(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
 		BlockEntity blockEntity = world.getBlockEntity(pos);
 		if(blockEntity instanceof PedestalBlockEntity pedestalBlockEntity) {
-			if(pedestalBlockEntity.craftingTime > 0) {
+			pedestalBlockEntity.setOwner(player);
+			
+			if (pedestalBlockEntity.craftingTime > 0) {
 				return ActionResult.FAIL;
 			}
-			if(pedestalBlockEntity.currentRecipe == null) {
+			if (pedestalBlockEntity.currentRecipe == null) {
 				return ActionResult.FAIL;
 			}
-			if(pedestalBlockEntity.currentRecipe instanceof GatedRecipe gatedRecipe && !gatedRecipe.canPlayerCraft(player)) {
+			if (pedestalBlockEntity.currentRecipe instanceof GatedRecipe gatedRecipe && !gatedRecipe.canPlayerCraft(player)) {
 				return ActionResult.FAIL;
 			}
 			

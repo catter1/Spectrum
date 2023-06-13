@@ -1,30 +1,23 @@
 package de.dafuqs.spectrum.blocks.structure;
 
-import de.dafuqs.spectrum.blocks.item_roundel.ItemRoundelBlockEntity;
-import de.dafuqs.spectrum.helpers.Support;
-import de.dafuqs.spectrum.interfaces.PlayerOwned;
-import de.dafuqs.spectrum.networking.SpectrumS2CPacketSender;
-import de.dafuqs.spectrum.registries.SpectrumBlockEntities;
-import de.dafuqs.spectrum.registries.SpectrumSoundEvents;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import de.dafuqs.spectrum.blocks.item_roundel.*;
+import de.dafuqs.spectrum.helpers.*;
+import de.dafuqs.spectrum.interfaces.*;
+import de.dafuqs.spectrum.networking.*;
+import de.dafuqs.spectrum.registries.*;
+import net.minecraft.block.*;
+import net.minecraft.block.entity.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.item.*;
 import net.minecraft.nbt.*;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.particle.*;
+import net.minecraft.server.world.*;
+import net.minecraft.sound.*;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
+import net.minecraft.util.registry.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class PreservationRoundelBlockEntity extends ItemRoundelBlockEntity implements PlayerOwned {
 	
@@ -88,7 +81,7 @@ public class PreservationRoundelBlockEntity extends ItemRoundelBlockEntity imple
 	@Override
 	public void inventoryChanged() {
 		super.inventoryChanged();
-		if (!world.isClient && controllerOffset != null && inventoryAndConnectedOnesMatchRequirement()) {
+		if (world != null && !world.isClient && controllerOffset != null && inventoryAndConnectedOnesMatchRequirement()) {
 			BlockEntity blockEntity = world.getBlockEntity(Support.directionalOffset(this.pos, this.controllerOffset, world.getBlockState(this.pos).get(PreservationControllerBlock.FACING)));
 			if (blockEntity instanceof PreservationControllerBlockEntity controller) {
 				// grant advancement

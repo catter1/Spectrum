@@ -8,6 +8,7 @@ import me.shedaniel.rei.api.common.entry.*;
 import me.shedaniel.rei.api.common.util.*;
 import net.minecraft.client.*;
 import net.minecraft.item.*;
+import net.minecraft.recipe.*;
 import net.minecraft.util.*;
 
 import java.util.*;
@@ -17,20 +18,21 @@ public abstract class GatedSpectrumDisplay extends BasicDisplay implements Gated
 	private final Identifier requiredAdvancementIdentifier;
 	private final boolean secret;
 	
+	// 1 input => 1 output
+	public GatedSpectrumDisplay(GatedRecipe recipe, Ingredient input, ItemStack output) {
+		this(recipe, Collections.singletonList(EntryIngredients.ofIngredient(input)), Collections.singletonList(EntryIngredients.of(output)));
+	}
+	
+	// n inputs => 1 output
 	public GatedSpectrumDisplay(GatedRecipe recipe, List<EntryIngredient> inputs, ItemStack output) {
 		this(recipe, inputs, Collections.singletonList(EntryIngredients.of(output)));
 	}
 	
+	// n inputs => m outputs
 	public GatedSpectrumDisplay(GatedRecipe recipe, List<EntryIngredient> inputs, List<EntryIngredient> outputs) {
 		super(inputs, outputs);
 		this.secret = recipe.isSecret();
 		this.requiredAdvancementIdentifier = recipe.getRequiredAdvancementIdentifier();
-	}
-	
-	public GatedSpectrumDisplay(Identifier requiredAdvancementIdentifier, boolean secret, List<EntryIngredient> inputs, List<EntryIngredient> outputs) {
-		super(inputs, outputs);
-		this.secret = secret;
-		this.requiredAdvancementIdentifier = requiredAdvancementIdentifier;
 	}
 	
 	@Override
@@ -38,16 +40,16 @@ public abstract class GatedSpectrumDisplay extends BasicDisplay implements Gated
 		if (this.isUnlocked()) {
 			return super.getInputEntries();
 		} else {
-			return new ArrayList<>();
+			return List.of();
 		}
 	}
-	
+
 	@Override
 	public List<EntryIngredient> getOutputEntries() {
 		if (this.isUnlocked() || SpectrumCommon.CONFIG.REIListsRecipesAsNotUnlocked) {
 			return super.getOutputEntries();
 		} else {
-			return new ArrayList<>();
+			return List.of();
 		}
 	}
 	

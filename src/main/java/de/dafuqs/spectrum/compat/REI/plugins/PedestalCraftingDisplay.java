@@ -1,21 +1,15 @@
 package de.dafuqs.spectrum.compat.REI.plugins;
 
-import de.dafuqs.spectrum.compat.REI.GatedSpectrumDisplay;
-import de.dafuqs.spectrum.compat.REI.REIHelper;
-import de.dafuqs.spectrum.compat.REI.SpectrumPlugins;
-import de.dafuqs.spectrum.enums.BuiltinGemstoneColor;
-import de.dafuqs.spectrum.enums.PedestalRecipeTier;
-import de.dafuqs.spectrum.recipe.pedestal.PedestalCraftingRecipe;
-import de.dafuqs.spectrum.registries.SpectrumItems;
-import me.shedaniel.rei.api.common.category.CategoryIdentifier;
-import me.shedaniel.rei.api.common.entry.EntryIngredient;
-import me.shedaniel.rei.api.common.util.EntryIngredients;
-import net.minecraft.client.MinecraftClient;
+import de.dafuqs.spectrum.compat.REI.*;
+import de.dafuqs.spectrum.enums.*;
+import de.dafuqs.spectrum.recipe.pedestal.*;
+import de.dafuqs.spectrum.registries.*;
+import me.shedaniel.rei.api.common.category.*;
+import me.shedaniel.rei.api.common.entry.*;
+import me.shedaniel.rei.api.common.util.*;
+import net.minecraft.client.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class PedestalCraftingDisplay extends GatedSpectrumDisplay {
 	
@@ -27,6 +21,7 @@ public class PedestalCraftingDisplay extends GatedSpectrumDisplay {
 	
 	/**
 	 * When using the REI recipe functionality
+	 *
 	 * @param recipe The recipe
 	 */
 	public PedestalCraftingDisplay(PedestalCraftingRecipe recipe) {
@@ -49,30 +44,30 @@ public class PedestalCraftingDisplay extends GatedSpectrumDisplay {
 			list.set(getSlotWithSize(recipe.getWidth(), i), REIHelper.ofIngredientStack(recipe.getIngredientStacks().get(i)));
 		}
 		
-		HashMap<BuiltinGemstoneColor, Integer> gemstonePowderInputs = recipe.getGemstonePowderInputs();
-		int firstGemstoneSlotId = 3*3;
-
+		Map<BuiltinGemstoneColor, Integer> gemstonePowderInputs = recipe.getGemstonePowderInputs();
+		int firstGemstoneSlotId = 3 * 3;
+		
 		int cyan = gemstonePowderInputs.getOrDefault(BuiltinGemstoneColor.CYAN, 0);
-		if(cyan > 0) {
+		if (cyan > 0) {
 			list.set(firstGemstoneSlotId, EntryIngredients.of(SpectrumItems.TOPAZ_POWDER, cyan));
 		}
 		int magenta = gemstonePowderInputs.getOrDefault(BuiltinGemstoneColor.MAGENTA, 0);
-		if(magenta > 0) {
-			list.set(firstGemstoneSlotId+1, EntryIngredients.of(SpectrumItems.AMETHYST_POWDER, magenta));
+		if (magenta > 0) {
+			list.set(firstGemstoneSlotId + 1, EntryIngredients.of(SpectrumItems.AMETHYST_POWDER, magenta));
 		}
 		int yellow = gemstonePowderInputs.getOrDefault(BuiltinGemstoneColor.YELLOW, 0);
-		if(yellow > 0) {
-			list.set(firstGemstoneSlotId+2, EntryIngredients.of(SpectrumItems.CITRINE_POWDER, yellow));
+		if (yellow > 0) {
+			list.set(firstGemstoneSlotId + 2, EntryIngredients.of(SpectrumItems.CITRINE_POWDER, yellow));
 		}
-		if(shownGemstoneSlotCount >= 4) {
+		if (shownGemstoneSlotCount >= 4) {
 			int black = gemstonePowderInputs.getOrDefault(BuiltinGemstoneColor.BLACK, 0);
-			if(black > 0) {
-				list.set(firstGemstoneSlotId+3, EntryIngredients.of(SpectrumItems.ONYX_POWDER, black));
+			if (black > 0) {
+				list.set(firstGemstoneSlotId + 3, EntryIngredients.of(SpectrumItems.ONYX_POWDER, black));
 			}
-			if(shownGemstoneSlotCount == 5) {
+			if (shownGemstoneSlotCount == 5) {
 				int white = gemstonePowderInputs.getOrDefault(BuiltinGemstoneColor.WHITE, 0);
-				if(white > 0) {
-					list.set(firstGemstoneSlotId+4, EntryIngredients.of(SpectrumItems.MOONSTONE_POWDER, white));
+				if (white > 0) {
+					list.set(firstGemstoneSlotId + 4, EntryIngredients.of(SpectrumItems.MOONSTONE_POWDER, white));
 				}
 			}
 		}
@@ -97,7 +92,6 @@ public class PedestalCraftingDisplay extends GatedSpectrumDisplay {
 		this.experience = experience;
 		this.craftingTime = craftingTime;
 	}*/
-	
 	@Override
 	public CategoryIdentifier<?> getCategoryIdentifier() {
 		return SpectrumPlugins.PEDESTAL_CRAFTING;

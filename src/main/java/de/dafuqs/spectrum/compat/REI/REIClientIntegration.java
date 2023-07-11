@@ -1,43 +1,33 @@
 package de.dafuqs.spectrum.compat.REI;
 
-import de.dafuqs.spectrum.SpectrumCommon;
-import de.dafuqs.spectrum.blocks.mob_blocks.FirestarterMobBlock;
-import de.dafuqs.spectrum.blocks.mob_blocks.FreezingMobBlock;
+import de.dafuqs.spectrum.*;
+import de.dafuqs.spectrum.blocks.mob_blocks.*;
 import de.dafuqs.spectrum.compat.REI.plugins.*;
-import de.dafuqs.spectrum.inventories.CinderhearthScreen;
-import de.dafuqs.spectrum.inventories.PedestalScreen;
-import de.dafuqs.spectrum.inventories.PotionWorkshopScreen;
-import de.dafuqs.spectrum.items.magic_items.NaturesStaffItem;
-import de.dafuqs.spectrum.recipe.SpectrumRecipeTypes;
-import de.dafuqs.spectrum.recipe.anvil_crushing.AnvilCrushingRecipe;
-import de.dafuqs.spectrum.recipe.cinderhearth.CinderhearthRecipe;
-import de.dafuqs.spectrum.recipe.crystallarieum.CrystallarieumRecipe;
-import de.dafuqs.spectrum.recipe.enchanter.EnchanterRecipe;
-import de.dafuqs.spectrum.recipe.enchantment_upgrade.EnchantmentUpgradeRecipe;
-import de.dafuqs.spectrum.recipe.fluid_converting.LiquidCrystalConvertingRecipe;
-import de.dafuqs.spectrum.recipe.fluid_converting.MidnightSolutionConvertingRecipe;
-import de.dafuqs.spectrum.recipe.fusion_shrine.FusionShrineRecipe;
-import de.dafuqs.spectrum.recipe.ink_converting.InkConvertingRecipe;
-import de.dafuqs.spectrum.recipe.pedestal.PedestalCraftingRecipe;
-import de.dafuqs.spectrum.recipe.potion_workshop.PotionWorkshopBrewingRecipe;
-import de.dafuqs.spectrum.recipe.potion_workshop.PotionWorkshopCraftingRecipe;
-import de.dafuqs.spectrum.recipe.potion_workshop.PotionWorkshopReactingRecipe;
-import de.dafuqs.spectrum.recipe.spirit_instiller.SpiritInstillerRecipe;
-import de.dafuqs.spectrum.recipe.titration_barrel.ITitrationBarrelRecipe;
-import de.dafuqs.spectrum.registries.SpectrumBlocks;
-import de.dafuqs.spectrum.registries.SpectrumItems;
-import dev.architectury.event.EventResult;
-import me.shedaniel.math.Rectangle;
-import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
-import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
-import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
-import me.shedaniel.rei.api.client.registry.screen.ScreenRegistry;
-import me.shedaniel.rei.api.common.entry.EntryIngredient;
-import me.shedaniel.rei.api.common.util.EntryStacks;
-import me.shedaniel.rei.plugin.common.BuiltinPlugin;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.block.Blocks;
+import de.dafuqs.spectrum.inventories.*;
+import de.dafuqs.spectrum.recipe.*;
+import de.dafuqs.spectrum.recipe.anvil_crushing.*;
+import de.dafuqs.spectrum.recipe.cinderhearth.*;
+import de.dafuqs.spectrum.recipe.enchanter.*;
+import de.dafuqs.spectrum.recipe.enchantment_upgrade.*;
+import de.dafuqs.spectrum.recipe.fluid_converting.*;
+import de.dafuqs.spectrum.recipe.fusion_shrine.*;
+import de.dafuqs.spectrum.recipe.ink_converting.*;
+import de.dafuqs.spectrum.recipe.pedestal.*;
+import de.dafuqs.spectrum.recipe.potion_workshop.*;
+import de.dafuqs.spectrum.recipe.spirit_instiller.*;
+import de.dafuqs.spectrum.recipe.titration_barrel.*;
+import de.dafuqs.spectrum.registries.*;
+import dev.architectury.event.*;
+import me.shedaniel.math.*;
+import me.shedaniel.rei.api.client.plugins.*;
+import me.shedaniel.rei.api.client.registry.category.*;
+import me.shedaniel.rei.api.client.registry.display.*;
+import me.shedaniel.rei.api.client.registry.screen.*;
+import me.shedaniel.rei.api.common.entry.*;
+import me.shedaniel.rei.api.common.util.*;
+import me.shedaniel.rei.plugin.common.*;
+import net.fabricmc.api.*;
+import net.minecraft.block.*;
 
 @Environment(EnvType.CLIENT)
 public class REIClientIntegration implements REIClientPlugin {
@@ -48,7 +38,7 @@ public class REIClientIntegration implements REIClientPlugin {
 		registry.add(new AnvilCrushingCategory());
 		registry.add(new FusionShrineCategory());
 		registry.add(new NaturesStaffConversionsCategory());
-		registry.add(new EnchanterCategory());
+		registry.add(new EnchanterEnchantingCategory());
 		registry.add(new EnchantmentUpgradeCategory());
 		registry.add(new PotionWorkshopBrewingCategory());
 		registry.add(new PotionWorkshopCraftingCategory());
@@ -59,7 +49,6 @@ public class REIClientIntegration implements REIClientPlugin {
 		registry.add(new HeatingCategory());
 		registry.add(new FreezingCategory());
 		registry.add(new InkConvertingCategory());
-		registry.add(new CrystallarieumCategory());
 		registry.add(new CinderhearthCategory());
 		registry.add(new TitrationBarrelCategory());
 		
@@ -81,13 +70,12 @@ public class REIClientIntegration implements REIClientPlugin {
 		registry.addWorkstations(SpectrumPlugins.NATURES_STAFF, EntryStacks.of(SpectrumItems.NATURES_STAFF));
 		registry.addWorkstations(SpectrumPlugins.HEATING, EntryStacks.of(SpectrumBlocks.BLAZE_MOB_BLOCK));
 		registry.addWorkstations(SpectrumPlugins.FREEZING, EntryStacks.of(SpectrumBlocks.POLAR_BEAR_MOB_BLOCK));
-		registry.addWorkstations(SpectrumPlugins.ENCHANTER, EntryStacks.of(SpectrumBlocks.ENCHANTER));
+		registry.addWorkstations(SpectrumPlugins.ENCHANTER_CRAFTING, EntryStacks.of(SpectrumBlocks.ENCHANTER));
 		registry.addWorkstations(SpectrumPlugins.ENCHANTMENT_UPGRADE, EntryStacks.of(SpectrumBlocks.ENCHANTER));
 		registry.addWorkstations(SpectrumPlugins.LIQUID_CRYSTAL_CONVERTING, EntryStacks.of(SpectrumItems.LIQUID_CRYSTAL_BUCKET));
 		registry.addWorkstations(SpectrumPlugins.MIDNIGHT_SOLUTION_CONVERTING, EntryStacks.of(SpectrumItems.MIDNIGHT_SOLUTION_BUCKET));
 		registry.addWorkstations(SpectrumPlugins.SPIRIT_INSTILLER, EntryStacks.of(SpectrumBlocks.SPIRIT_INSTILLER));
 		registry.addWorkstations(SpectrumPlugins.INK_CONVERTING, EntryStacks.of(SpectrumBlocks.COLOR_PICKER));
-		registry.addWorkstations(SpectrumPlugins.CRYSTALLARIEUM, EntryStacks.of(SpectrumBlocks.CRYSTALLARIEUM));
 		
 		registry.addWorkstations(BuiltinPlugin.BREWING, EntryStacks.of(SpectrumBlocks.POTION_WORKSHOP));
 		registry.addWorkstations(SpectrumPlugins.POTION_WORKSHOP_BREWING, EntryStacks.of(SpectrumBlocks.POTION_WORKSHOP));
@@ -97,21 +85,6 @@ public class REIClientIntegration implements REIClientPlugin {
 		registry.addWorkstations(BuiltinPlugin.BLASTING, EntryStacks.of(SpectrumBlocks.CINDERHEARTH));
 		registry.addWorkstations(SpectrumPlugins.CINDERHEARTH, EntryStacks.of(SpectrumBlocks.CINDERHEARTH));
 		registry.addWorkstations(SpectrumPlugins.TITRATION_BARREL, EntryStacks.of(SpectrumBlocks.TITRATION_BARREL));
-		
-		// For item crushing and others are in-world recipes there is no gui to fill
-		// therefore the plus button is obsolete
-		
-		// this is getting removed for... whatever reason
-		// registry.removePlusButton(SpectrumPlugins.ANVIL_CRUSHING);
-		// registry.removePlusButton(SpectrumPlugins.FUSION_SHRINE);
-		// registry.removePlusButton(SpectrumPlugins.NATURES_STAFF);
-		// registry.removePlusButton(SpectrumPlugins.POTION_WORKSHOP_REACTING);
-		// registry.removePlusButton(SpectrumPlugins.ENCHANTER);
-		// registry.removePlusButton(SpectrumPlugins.ENCHANTMENT_UPGRADE);
-		// registry.removePlusButton(SpectrumPlugins.MIDNIGHT_SOLUTION_CONVERTING);
-		// registry.removePlusButton(SpectrumPlugins.SPIRIT_INSTILLER);
-		// registry.removePlusButton(SpectrumPlugins.HEATING);
-		// registry.removePlusButton(SpectrumPlugins.FREEZING);
 	}
 	
 	@Override
@@ -119,20 +92,18 @@ public class REIClientIntegration implements REIClientPlugin {
 		registry.registerFiller(AnvilCrushingRecipe.class, AnvilCrushingDisplay::new);
 		registry.registerRecipeFiller(PedestalCraftingRecipe.class, SpectrumRecipeTypes.PEDESTAL, PedestalCraftingDisplay::new);
 		registry.registerRecipeFiller(FusionShrineRecipe.class, SpectrumRecipeTypes.FUSION_SHRINE, FusionShrineDisplay::new);
-		registry.registerRecipeFiller(EnchanterRecipe.class, SpectrumRecipeTypes.ENCHANTER, EnchanterDisplay::new);
+		registry.registerRecipeFiller(EnchanterRecipe.class, SpectrumRecipeTypes.ENCHANTER, EnchanterEnchantingDisplay::new);
 		registry.registerRecipeFiller(EnchantmentUpgradeRecipe.class, SpectrumRecipeTypes.ENCHANTMENT_UPGRADE, EnchantmentUpgradeDisplay::new);
 		registry.registerRecipeFiller(PotionWorkshopBrewingRecipe.class, SpectrumRecipeTypes.POTION_WORKSHOP_BREWING, PotionWorkshopBrewingDisplay::new);
 		registry.registerRecipeFiller(PotionWorkshopCraftingRecipe.class, SpectrumRecipeTypes.POTION_WORKSHOP_CRAFTING, PotionWorkshopCraftingDisplay::new);
 		registry.registerRecipeFiller(SpiritInstillerRecipe.class, SpectrumRecipeTypes.SPIRIT_INSTILLING, SpiritInstillingDisplay::new);
-		registry.registerRecipeFiller(MidnightSolutionConvertingRecipe.class, SpectrumRecipeTypes.MIDNIGHT_SOLUTION_CONVERTING, MidnightSolutionConvertingDisplay::new);
 		registry.registerRecipeFiller(LiquidCrystalConvertingRecipe.class, SpectrumRecipeTypes.LIQUID_CRYSTAL_CONVERTING, LiquidCrystalConvertingDisplay::new);
+		registry.registerRecipeFiller(MidnightSolutionConvertingRecipe.class, SpectrumRecipeTypes.MIDNIGHT_SOLUTION_CONVERTING, MidnightSolutionConvertingDisplay::new);
 		registry.registerRecipeFiller(InkConvertingRecipe.class, SpectrumRecipeTypes.INK_CONVERTING, InkConvertingDisplay::new);
 		registry.registerRecipeFiller(PotionWorkshopReactingRecipe.class, SpectrumRecipeTypes.POTION_WORKSHOP_REACTING, PotionWorkshopReactingDisplay::new);
-		registry.registerRecipeFiller(CrystallarieumRecipe.class, SpectrumRecipeTypes.CRYSTALLARIEUM, CrystallarieumDisplay::new);
 		registry.registerRecipeFiller(CinderhearthRecipe.class, SpectrumRecipeTypes.CINDERHEARTH, CinderhearthDisplay::new);
 		registry.registerRecipeFiller(ITitrationBarrelRecipe.class, SpectrumRecipeTypes.TITRATION_BARREL, TitrationBarrelDisplay::new);
 		
-		NaturesStaffItem.BLOCK_CONVERSIONS.forEach((key, value) -> registry.add(new NaturesStaffConversionsDisplay(EntryStacks.of(key), EntryStacks.of(value.getBlock()))));
 		FreezingMobBlock.FREEZING_STATE_MAP.forEach((key, value) -> registry.add(new FreezingDisplay(BlockToBlockWithChanceDisplay.blockToEntryStack(key.getBlock()), BlockToBlockWithChanceDisplay.blockToEntryStack(value.getLeft().getBlock()), value.getRight())));
 		FreezingMobBlock.FREEZING_MAP.forEach((key, value) -> registry.add(new FreezingDisplay(BlockToBlockWithChanceDisplay.blockToEntryStack(key), BlockToBlockWithChanceDisplay.blockToEntryStack(value.getLeft().getBlock()), value.getRight())));
 		FirestarterMobBlock.BURNING_MAP.forEach((key, value) -> registry.add(new HeatingDisplay(BlockToBlockWithChanceDisplay.blockToEntryStack(key), BlockToBlockWithChanceDisplay.blockToEntryStack(value.getLeft().getBlock()), value.getRight())));

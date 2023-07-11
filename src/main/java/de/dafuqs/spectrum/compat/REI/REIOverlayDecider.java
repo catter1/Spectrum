@@ -1,11 +1,10 @@
 package de.dafuqs.spectrum.compat.REI;
 
-import de.dafuqs.spectrum.inventories.PaintbrushScreen;
-import me.shedaniel.rei.api.client.registry.screen.OverlayDecider;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.ActionResult;
+import de.dafuqs.spectrum.inventories.*;
+import me.shedaniel.rei.api.client.registry.screen.*;
+import net.fabricmc.api.*;
+import net.minecraft.client.gui.screen.*;
+import net.minecraft.util.*;
 
 @Environment(EnvType.CLIENT)
 public class REIOverlayDecider implements OverlayDecider {
@@ -19,9 +18,10 @@ public class REIOverlayDecider implements OverlayDecider {
 	
 	@Override
 	public <R extends Screen> ActionResult shouldScreenBeOverlaid(R screen) {
-		if(screen instanceof PaintbrushScreen) {
+		if (screen instanceof PaintbrushScreen) {
 			return ActionResult.FAIL;
 		}
 		return ActionResult.PASS;
 	}
+	
 }

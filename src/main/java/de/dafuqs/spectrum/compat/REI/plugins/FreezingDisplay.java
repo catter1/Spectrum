@@ -1,15 +1,14 @@
 package de.dafuqs.spectrum.compat.REI.plugins;
 
-import de.dafuqs.revelationary.api.advancements.AdvancementHelper;
-import de.dafuqs.spectrum.SpectrumCommon;
-import de.dafuqs.spectrum.compat.REI.SpectrumPlugins;
-import me.shedaniel.rei.api.common.category.CategoryIdentifier;
-import me.shedaniel.rei.api.common.entry.EntryIngredient;
-import me.shedaniel.rei.api.common.entry.EntryStack;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.Identifier;
+import de.dafuqs.revelationary.api.advancements.*;
+import de.dafuqs.spectrum.*;
+import de.dafuqs.spectrum.compat.REI.*;
+import me.shedaniel.rei.api.common.category.*;
+import me.shedaniel.rei.api.common.entry.*;
+import net.minecraft.client.*;
+import net.minecraft.util.*;
 
-import java.util.Collections;
+import java.util.*;
 
 public class FreezingDisplay extends BlockToBlockWithChanceDisplay {
 	

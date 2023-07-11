@@ -1,20 +1,17 @@
 package de.dafuqs.spectrum.compat.REI.plugins;
 
-import de.dafuqs.revelationary.api.advancements.AdvancementHelper;
-import de.dafuqs.spectrum.compat.REI.GatedSpectrumDisplay;
-import de.dafuqs.spectrum.compat.REI.REIHelper;
-import de.dafuqs.spectrum.compat.REI.SpectrumPlugins;
-import de.dafuqs.spectrum.recipe.titration_barrel.ITitrationBarrelRecipe;
-import de.dafuqs.spectrum.recipe.titration_barrel.TitrationBarrelRecipe;
-import me.shedaniel.rei.api.common.category.CategoryIdentifier;
-import me.shedaniel.rei.api.common.entry.EntryIngredient;
-import me.shedaniel.rei.api.common.util.EntryIngredients;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.Items;
-import org.jetbrains.annotations.NotNull;
+import de.dafuqs.revelationary.api.advancements.*;
+import de.dafuqs.spectrum.compat.REI.*;
+import de.dafuqs.spectrum.recipe.titration_barrel.*;
+import me.shedaniel.rei.api.common.category.*;
+import me.shedaniel.rei.api.common.entry.*;
+import me.shedaniel.rei.api.common.util.*;
+import net.minecraft.client.*;
+import net.minecraft.fluid.*;
+import net.minecraft.item.*;
+import org.jetbrains.annotations.*;
 
-import java.util.List;
+import java.util.*;
 
 public class TitrationBarrelDisplay extends GatedSpectrumDisplay {
 	
@@ -23,8 +20,8 @@ public class TitrationBarrelDisplay extends GatedSpectrumDisplay {
 	protected final TitrationBarrelRecipe.FermentationData fermentationData;
 	
 	public TitrationBarrelDisplay(@NotNull ITitrationBarrelRecipe recipe) {
-		super(recipe, buildInputs(recipe), recipe.getOutput());
-		if(recipe.getTappingItem() == Items.AIR) {
+		super(recipe, buildInputs(recipe), List.of(buildOutputs(recipe)));
+		if (recipe.getTappingItem() == Items.AIR) {
 			this.tappingIngredient = EntryIngredient.empty();
 		} else {
 			this.tappingIngredient = EntryIngredients.of(recipe.getTappingItem().getDefaultStack());
@@ -33,9 +30,13 @@ public class TitrationBarrelDisplay extends GatedSpectrumDisplay {
 		this.fermentationData = recipe.getFermentationData();
 	}
 	
+	private static EntryIngredient buildOutputs(ITitrationBarrelRecipe recipe) {
+		return EntryIngredients.of(recipe.getOutput());
+	}
+	
 	public static List<EntryIngredient> buildInputs(ITitrationBarrelRecipe recipe) {
 		List<EntryIngredient> inputs = REIHelper.toEntryIngredients(recipe.getIngredientStacks());
-		if(recipe.getFluid() != Fluids.EMPTY) {
+		if (recipe.getFluid() != Fluids.EMPTY) {
 			inputs.add(EntryIngredients.of(recipe.getFluid().getBucketItem()));
 		}
 		return inputs;

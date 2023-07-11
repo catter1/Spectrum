@@ -1,31 +1,22 @@
 package de.dafuqs.spectrum.loot;
 
-import de.dafuqs.spectrum.SpectrumCommon;
-import de.dafuqs.spectrum.blocks.mob_head.SpectrumSkullBlock;
-import de.dafuqs.spectrum.compat.gofish.GoFishCompat;
+import de.dafuqs.spectrum.*;
+import de.dafuqs.spectrum.blocks.mob_head.*;
+import de.dafuqs.spectrum.compat.gofish.*;
 import de.dafuqs.spectrum.loot.conditions.*;
-import de.dafuqs.spectrum.registries.SpectrumBlocks;
-import de.dafuqs.spectrum.registries.SpectrumItems;
-import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
-import net.minecraft.entity.passive.AxolotlEntity;
-import net.minecraft.entity.passive.FoxEntity;
-import net.minecraft.entity.passive.MooshroomEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.loot.LootPool;
-import net.minecraft.loot.condition.EntityPropertiesLootCondition;
-import net.minecraft.loot.condition.RandomChanceLootCondition;
-import net.minecraft.loot.context.LootContext;
-import net.minecraft.loot.entry.ItemEntry;
-import net.minecraft.loot.entry.LootTableEntry;
-import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
-import net.minecraft.predicate.entity.EntityPredicate;
-import net.minecraft.predicate.entity.FishingHookPredicate;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Identifier;
+import de.dafuqs.spectrum.registries.*;
+import net.fabricmc.fabric.api.loot.v2.*;
+import net.minecraft.entity.passive.*;
+import net.minecraft.item.*;
+import net.minecraft.loot.*;
+import net.minecraft.loot.condition.*;
+import net.minecraft.loot.context.*;
+import net.minecraft.loot.entry.*;
+import net.minecraft.loot.provider.number.*;
+import net.minecraft.predicate.entity.*;
+import net.minecraft.util.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class SpectrumLootPoolModifiers {
 	
@@ -117,19 +108,12 @@ public class SpectrumLootPoolModifiers {
 	
 	public static void setup() {
 		LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
-			
-			// Dungeon loot
-			if(id.equals(new Identifier("chests/simple_dungeon"))) {
-				tableBuilder.pool(new LootPool.Builder().rolls(ConstantLootNumberProvider.create(1))
-						.conditionally(RandomChanceLootCondition.builder(0.02F).build())
-						.with(ItemEntry.builder(SpectrumItems.MYSTERIOUS_LOCKET).build()));
-				
 			// Treasure hunter pools
-			} else if (trophyHunterLootPools.containsKey(id)) {
+			if (trophyHunterLootPools.containsKey(id)) {
 				TreasureHunterDropDefinition treasureHunterDropDefinition = trophyHunterLootPools.get(id);
 				tableBuilder.pool(getLootPool(treasureHunterDropDefinition));
-			// Some treasure hunter pools use custom loot conditions
-			// because vanillas are too generic (fox/snow fox both use "fox" loot table)
+				// Some treasure hunter pools use custom loot conditions
+				// because vanillas are too generic (fox/snow fox both use "fox" loot table)
 			} else if (id.equals(new Identifier("entities/fox"))) {
 				tableBuilder.pool(getFoxLootPool(FoxEntity.Type.RED, SpectrumBlocks.getMobHead(SpectrumSkullBlock.SpectrumSkullBlockType.FOX).asItem(), 0.02F));
 				tableBuilder.pool(getFoxLootPool(FoxEntity.Type.SNOW, SpectrumBlocks.getMobHead(SpectrumSkullBlock.SpectrumSkullBlockType.FOX_ARCTIC).asItem(), 0.02F));
